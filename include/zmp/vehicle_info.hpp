@@ -1,0 +1,6 @@
+#ifndef VEHCILE_INFO_HPP
+#define VEHCILE_INFO_HPP
+
+#define ZMP_LOOP_RATE 50
+
+#endif // VEHCILE_INFO_HPP
