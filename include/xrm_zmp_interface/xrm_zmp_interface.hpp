@@ -9,7 +9,6 @@
 // From Control - Vehicle Control Command
 #include <autoware_auto_control_msgs/msg/ackermann_control_command.hpp>
 // From Planning - Vehicle Signal Commands
-#include <autoware_auto_vehicle_msgs/msg/hand_brake_command.hpp>
 #include <autoware_auto_vehicle_msgs/msg/hazard_lights_command.hpp>
 #include <autoware_auto_vehicle_msgs/msg/headlights_command.hpp>
 #include <autoware_auto_vehicle_msgs/msg/horn_command.hpp>
@@ -28,12 +27,11 @@
 #include <autoware_auto_vehicle_msgs/msg/velocity_report.hpp>
 // Vehicle Signal Reports
 #include <autoware_auto_vehicle_msgs/msg/gear_report.hpp>
-#include <autoware_auto_vehicle_msgs/msg/hand_brake_report.hpp>
 #include <autoware_auto_vehicle_msgs/msg/hazard_lights_report.hpp>
-#include <autoware_auto_vehicle_msgs/msg/headlights_report.hpp>
-#include <autoware_auto_vehicle_msgs/msg/horn_report.hpp>
 #include <autoware_auto_vehicle_msgs/msg/turn_indicators_report.hpp>
-#include <autoware_auto_vehicle_msgs/msg/wipers_report.hpp>
+
+#include <zmp/vehicle_info.hpp>
+#include <zmp/vehicle_util.hpp>
 
 class XrmZmpNode : public rclcpp::Node
 {
@@ -41,7 +39,8 @@ public:
     XrmZmpNode();
     ~XrmZmpNode();
 
-private:
+    VehicleUtil vehicle_util_;
+
     // Subscribers: From Autoware
     // Gate Mode
     rclcpp::Subscription<tier4_control_msgs::msg::GateMode>::SharedPtr gate_mode_sub_;
@@ -49,17 +48,13 @@ private:
     rclcpp::Subscription<autoware_auto_control_msgs::msg::AckermannControlCommand>::SharedPtr control_cmd_sub_;
     rclcpp::Subscription<autoware_auto_vehicle_msgs::msg::GearCommand>::SharedPtr gear_cmd_sub_;
     // From Planning - Vehicle Signal Commands
-    rclcpp::Subscription<autoware_auto_vehicle_msgs::msg::HandBrakeCommand>::SharedPtr hand_brake_cmd_sub_;
     rclcpp::Subscription<autoware_auto_vehicle_msgs::msg::HazardLightsCommand>::SharedPtr hazard_lights_cmd_sub_;
-    rclcpp::Subscription<autoware_auto_vehicle_msgs::msg::HeadlightsCommand>::SharedPtr headlights_cmd_sub_;
-    rclcpp::Subscription<autoware_auto_vehicle_msgs::msg::HornCommand>::SharedPtr horn_cmd_sub_;
-    rclcpp::Subscription<autoware_auto_vehicle_msgs::msg::StationaryLockingCommand>::SharedPtr stationary_locking_cmd_sub_;
     rclcpp::Subscription<autoware_auto_vehicle_msgs::msg::TurnIndicatorsCommand>::SharedPtr turn_indicators_cmd_sub_;
-    rclcpp::Subscription<autoware_auto_vehicle_msgs::msg::WipersCommand>::SharedPtr wipers_cmd_sub_;
 
     // Publishers: To Autoware
     // Control Mode
     rclcpp::Publisher<autoware_auto_vehicle_msgs::msg::ControlModeReport>::SharedPtr control_mode_pub_;
+    rclcpp::Publisher<tier4_control_msgs::msg::GateMode>::SharedPtr gate_mode_pub_;
     // Steering Status
     rclcpp::Publisher<autoware_auto_vehicle_msgs::msg::SteeringReport>::SharedPtr steering_report_pub_;
     rclcpp::Publisher<tier4_vehicle_msgs::msg::SteeringWheelStatusStamped>::SharedPtr steering_wheel_status_pub_;
@@ -68,12 +63,8 @@ private:
     rclcpp::Publisher<autoware_auto_vehicle_msgs::msg::VelocityReport>::SharedPtr velocity_report_pub_;
     // Vehicle Signal Reports
     rclcpp::Publisher<autoware_auto_vehicle_msgs::msg::GearReport>::SharedPtr gear_report_pub_;
-    rclcpp::Publisher<autoware_auto_vehicle_msgs::msg::HandBrakeReport>::SharedPtr hand_brake_report_pub_;
     rclcpp::Publisher<autoware_auto_vehicle_msgs::msg::HazardLightsReport>::SharedPtr hazard_lights_report_pub_;
-    rclcpp::Publisher<autoware_auto_vehicle_msgs::msg::HeadlightsReport>::SharedPtr headlights_report_pub_;
-    rclcpp::Publisher<autoware_auto_vehicle_msgs::msg::HornReport>::SharedPtr horn_report_pub_;
     rclcpp::Publisher<autoware_auto_vehicle_msgs::msg::TurnIndicatorsReport>::SharedPtr turn_indicators_report_pub_;
-    rclcpp::Publisher<autoware_auto_vehicle_msgs::msg::WipersReport>::SharedPtr wipers_report_pub_;
 
     // Callbacks
     void gate_mode_callback(const tier4_control_msgs::msg::GateMode::SharedPtr msg);
