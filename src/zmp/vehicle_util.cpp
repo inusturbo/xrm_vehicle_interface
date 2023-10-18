@@ -148,8 +148,48 @@ int VehicleUtil::isStrControled()
 int VehicleUtil::GetCurrentGear()
 {
   std::cout << "VehicleUtil::GetGear()" << std::endl;
-  GetDrvInf();
-  return _drvInf.actualShift;
+  GetOtherInf();
+  return _otherInf.shiftFromPrius; //(0x00=B, 0x10=D, 0x20=N, 0x40=R)
+}
+
+float VehicleUtil::GetStrAngle()
+{
+  return _strInf.angle / 10.0f;
+}
+
+float VehicleUtil::GetStrRad()
+{
+  return DegToRad(GetStrAngle());
+}
+
+float VehicleUtil::GetDrvSpeedKmh()
+{
+  return _otherInf.velocFromP;
+}
+
+float VehicleUtil::GetDrvSpeedMps()
+{
+  return GetDrvSpeedKmh() / 3.6f;
+}
+
+unsigned char VehicleUtil::GetHazardLights()
+{
+  if (GetBlinkerLeft() == 1 && GetBlinkerRight() == 1)
+  {
+    return 1;
+  }
+  else
+  {
+    return 0;
+  }
+}
+unsigned char VehicleUtil::GetBlinkerLeft()
+{
+  return _brakeInf.blinkerLeft;
+}
+unsigned char VehicleUtil::GetBlinkerRight()
+{
+  return _brakeInf.blinkerRight;
 }
 
 void VehicleUtil::UpdateSteerState(REP_STEER_INFO_INDEX index)
@@ -539,4 +579,8 @@ void VehicleUtil::SetConfig(HEV_CONFIG kind, float val)
 void VehicleUtil::SaveConfig()
 {
   _hevCnt->SaveControlGain();
+}
+float VehicleUtil::DegToRad(float deg)
+{
+  return (deg * M_PI / 180.0);
 }

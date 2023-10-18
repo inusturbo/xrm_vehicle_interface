@@ -117,13 +117,20 @@ public:
   bool Close();                                   // 关闭。
   bool SetConfigCallback(ChangeConfig *callback); // 设置配置回调函数。
 
-  void GetDrvInf();     // 获取驱动信息。
-  void GetStrInf();     // 获取转向信息。
-  void GetBrakeInf();   // 获取刹车信息。
-  void GetOtherInf();   // 获取其他车辆信息。
-  int isDrvControled(); // 判断驱动是否控制。
-  int isStrControled(); // 判断转向是否控制。
-  int GetCurrentGear(); // 获取档位。
+  void GetDrvInf();                // 获取驱动信息。
+  void GetStrInf();                // 获取转向信息。
+  void GetBrakeInf();              // 获取刹车信息。
+  void GetOtherInf();              // 获取其他车辆信息。
+  int isDrvControled();            // 判断驱动是否控制。
+  int isStrControled();            // 判断转向是否控制。
+  int GetCurrentGear();            // 获取档位。
+  float GetStrAngle();             // 获取转向角度。
+  float GetStrRad();               // 获取转向角度。
+  float GetDrvSpeedKmh();          // 获取车速。
+  float GetDrvSpeedMps();          // 获取车速。
+  unsigned char GetHazardLights(); // 获取危险灯。
+  unsigned char GetBlinkerLeft();  // 获取左转灯。
+  unsigned char GetBlinkerRight(); // 获取右转灯。
 
   void UpdateSteerState(REP_STEER_INFO_INDEX index);
   void UpdateDriveState(REP_DRIVE_INFO_INDEX index);
@@ -180,6 +187,7 @@ public:
   void SetConfig(HEV_CONFIG kind, int val);
   void SetConfig(HEV_CONFIG kind, float val);
   void SaveConfig();
+  float DegToRad(float deg)
 };
 
 class ChangeConfig

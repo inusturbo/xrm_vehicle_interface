@@ -20,10 +20,8 @@
 // Control Mode
 #include <autoware_auto_vehicle_msgs/msg/control_mode_report.hpp>
 // Steering Status
-#include <tier4_vehicle_msgs/msg/steering_wheel_status_stamped.hpp>
 #include <autoware_auto_vehicle_msgs/msg/steering_report.hpp>
 // Actuation Status
-#include <tier4_vehicle_msgs/msg/actuation_status_stamped.hpp>
 #include <autoware_auto_vehicle_msgs/msg/velocity_report.hpp>
 // Vehicle Signal Reports
 #include <autoware_auto_vehicle_msgs/msg/gear_report.hpp>
@@ -57,9 +55,7 @@ public:
     rclcpp::Publisher<tier4_control_msgs::msg::GateMode>::SharedPtr gate_mode_pub_;
     // Steering Status
     rclcpp::Publisher<autoware_auto_vehicle_msgs::msg::SteeringReport>::SharedPtr steering_report_pub_;
-    rclcpp::Publisher<tier4_vehicle_msgs::msg::SteeringWheelStatusStamped>::SharedPtr steering_wheel_status_pub_;
     // Actuation Status
-    rclcpp::Publisher<tier4_vehicle_msgs::msg::ActuationStatusStamped>::SharedPtr actuation_status_pub_;
     rclcpp::Publisher<autoware_auto_vehicle_msgs::msg::VelocityReport>::SharedPtr velocity_report_pub_;
     // Vehicle Signal Reports
     rclcpp::Publisher<autoware_auto_vehicle_msgs::msg::GearReport>::SharedPtr gear_report_pub_;
