@@ -91,11 +91,10 @@ struct ConfigInf
   int data[21];
 };
 
-class VehicleUtil : public ChangeStateObserver
+class VehicleUtil
 {
 public:
   VehicleUtil();
-  virtual ~VehicleUtil();
   HevControl *_hevCnt;
   CANUSBZ *_canCom;
 

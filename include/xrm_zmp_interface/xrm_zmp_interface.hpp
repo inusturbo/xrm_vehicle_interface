@@ -8,13 +8,11 @@
 #include <tier4_control_msgs/msg/gate_mode.hpp>
 // From Control - Vehicle Control Command
 #include <autoware_auto_control_msgs/msg/ackermann_control_command.hpp>
+#include <autoware_auto_vehicle_msgs/msg/gear_command.hpp>
+
 // From Planning - Vehicle Signal Commands
 #include <autoware_auto_vehicle_msgs/msg/hazard_lights_command.hpp>
-#include <autoware_auto_vehicle_msgs/msg/headlights_command.hpp>
-#include <autoware_auto_vehicle_msgs/msg/horn_command.hpp>
-#include <autoware_auto_vehicle_msgs/msg/stationary_locking_command.hpp>
 #include <autoware_auto_vehicle_msgs/msg/turn_indicators_command.hpp>
-#include <autoware_auto_vehicle_msgs/msg/wipers_command.hpp>
 
 // Publishers: To Autoware
 // Control Mode
@@ -35,9 +33,8 @@ class XrmZmpNode : public rclcpp::Node
 {
 public:
     XrmZmpNode();
-    ~XrmZmpNode();
 
-    VehicleUtil vehicle_util_;
+    VehicleUtil *vehicle_util_;
 
     // Subscribers: From Autoware
     // Gate Mode
@@ -66,13 +63,8 @@ public:
     void gate_mode_callback(const tier4_control_msgs::msg::GateMode::SharedPtr msg);
     void control_cmd_callback(const autoware_auto_control_msgs::msg::AckermannControlCommand::SharedPtr msg);
     void gear_cmd_callback(const autoware_auto_vehicle_msgs::msg::GearCommand::SharedPtr msg);
-    void hand_brake_cmd_callback(const autoware_auto_vehicle_msgs::msg::HandBrakeCommand::SharedPtr msg);
     void hazard_lights_cmd_callback(const autoware_auto_vehicle_msgs::msg::HazardLightsCommand::SharedPtr msg);
-    void headlights_cmd_callback(const autoware_auto_vehicle_msgs::msg::HeadlightsCommand::SharedPtr msg);
-    void horn_cmd_callback(const autoware_auto_vehicle_msgs::msg::HornCommand::SharedPtr msg);
-    void stationary_locking_cmd_callback(const autoware_auto_vehicle_msgs::msg::StationaryLockingCommand::SharedPtr msg);
     void turn_indicators_cmd_callback(const autoware_auto_vehicle_msgs::msg::TurnIndicatorsCommand::SharedPtr msg);
-    void wipers_cmd_callback(const autoware_auto_vehicle_msgs::msg::WipersCommand::SharedPtr msg);
 
     // Functions
     void publishCommands();

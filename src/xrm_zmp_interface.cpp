@@ -34,7 +34,7 @@ XrmZmpNode::XrmZmpNode() : Node("xrm_zmp_interface")
   gate_mode_pub_ = this->create_publisher<tier4_control_msgs::msg::GateMode>(
       "/control/current_gate_mode", rclcpp::QoS(1));
   // Steering Status
-  steering_status_pub_ = this->create_publisher<autoware_auto_vehicle_msgs::msg::SteeringReport>(
+  steering_report_pub_ = this->create_publisher<autoware_auto_vehicle_msgs::msg::SteeringReport>(
       "/vehicle/status/steering_status", rclcpp::QoS(1));
   // Actuation Status
   velocity_report_pub_ = this->create_publisher<autoware_auto_vehicle_msgs::msg::VelocityReport>(
@@ -174,6 +174,7 @@ void XrmZmpNode::publishCommands()
   vehicle_util_->UpdateState();
   const rclcpp::Time current_time = get_clock()->now();
   std_msgs::msg::Header header;
+  string base_frame_id_= declare_parameter("base_frame_id","base_link");
   header.frame_id = base_frame_id_;
   header.stamp = current_time;
 
@@ -217,7 +218,7 @@ void XrmZmpNode::publishCommands()
       vehicle_util_->GetStrRad(); // current vehicle steering wheel angle [rad]
   float current_steering_tire_angle = current_steer_wheel / WHEEL_TO_STEERING;
   steering_report_msg.steering_tire_angle = current_steering_tire_angle;
-  steering_status_pub_.publish(steering_report_msg);
+  steering_report_pub_->publish(steering_report_msg);
 
   // publish velocity status
   autoware_auto_vehicle_msgs::msg::VelocityReport velocity_report_msg;
@@ -285,5 +286,5 @@ void XrmZmpNode::publishCommands()
   {
     turn_indicators_report_msg.report = 0;
   }
-  turn_indicators_report_pub_.publish(turn_indicators_report_msg);
+  turn_indicators_report_pub_->publish(turn_indicators_report_msg);
 }

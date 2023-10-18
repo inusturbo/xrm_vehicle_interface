@@ -13,10 +13,6 @@ VehicleUtil::VehicleUtil()
   _errLevel = 0;
   memset(&_firm_version, 0x0, sizeof(char) * 9);
 }
-VehicleUtil::~VehicleUtil()
-{
-  std::cout << "VehicleUtil::~VehicleUtil()" << std::endl;
-}
 
 bool VehicleUtil::Init()
 {
@@ -28,8 +24,6 @@ bool VehicleUtil::Init()
 
   _canCom->SetCANUSBZParam(CAN_CHANNEL_0, CAN_SPEED_500, CANID_KIND_11);
   _canCom->SetCANUSBZParam(CAN_CHANNEL_1, CAN_SPEED_1000, CANID_KIND_11);
-
-  _hevCnt->SetStatusCallback(this);
 
   ClearCntDiag(); // Autoware Extension
   return true;
