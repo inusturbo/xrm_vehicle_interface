@@ -8,6 +8,7 @@
 #include <sys/time.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <cmath>
 
 using namespace std;
 using namespace zmp::minivan;
@@ -146,8 +147,9 @@ public:
   void SetStrCMode(int cmode);
   void SetStrOMOde(int omode);
   void SetStrTorque(int torque);
-  void SetStrAngle(int angle);
+  void SetStrAngle(float angle);
   void SetStrServo(int servo);
+  void SteeringControl(float cmd_steering_angle, float steering_tire_rotation_rate);
 
   // Set Drive
   void SetDrvMode(int mode);
@@ -157,6 +159,8 @@ public:
   void SetDrvVeloc(float veloc);
   void SetDrvShiftMode(int shift);
   void SetDrvServo(int servo);
+  void StopVehicle();
+  void VelocityControl(float veloc_kmh, float acc);
 
   // Set Brake
   void SetBrakeStroke(int stroke);

@@ -387,14 +387,43 @@ void VehicleUtil::SetStrTorque(int torque)
 {
   _hevCnt->SetStrTorque(torque + _asistTrq);
 }
-void VehicleUtil::SetStrAngle(int angle)
+void VehicleUtil::SetStrAngle(float angle)
 {
-  float sndVal = angle / 10.0f;
-  _hevCnt->SetStrAngle(sndVal); // 角度値 deg. -666~666
+  _hevCnt->SetStrAngle(angle); // 角度値 deg. -666~666
 }
 void VehicleUtil::SetStrServo(int servo)
 {
   _hevCnt->SetStrServo(servo);
+}
+// void VehicleUtil::SteeringControl(float cmd_steering_angle)
+// {
+//   GetStrInf();
+//   if (_strInf.mode == 0x00)
+//   {
+//     return;
+//   }
+//   SetStrAngle(cmd_steering_angle);
+// }
+void VehicleUtil::SteeringControl(float cmd_steering_angle, float steering_tire_rotation_rate)
+{
+  GetStrInf();
+  if (_strInf.mode == 0x00)
+  {
+    return;
+  }
+
+  // 获取当前的转向角度
+  float current_steering_angle = _strInf.angle;
+
+  // 计算目标和当前转向角度之间的差值
+  float angle_difference = cmd_steering_angle - current_steering_angle;
+
+  // 根据steering_tire_rotation_rate和固定的时间间隔来更新转向角度
+  float angle_update = std::min(std::abs(angle_difference), steering_tire_rotation_rate * 0.1f);
+  angle_update = std::copysign(angle_update, angle_difference); // 给更新值赋予正确的符号
+
+  // 更新转向角度
+  SetStrAngle(current_steering_angle + angle_update);
 }
 
 // Set Drive
@@ -425,6 +454,79 @@ void VehicleUtil::SetDrvShiftMode(int shift)
 void VehicleUtil::SetDrvServo(int servo)
 {
   _hevCnt->SetDrvServo(servo);
+}
+void VehicleUtil::StopVehicle()
+{
+  _hevCnt->SetGasStroke(0);
+  usleep(200000);
+  _hevCnt->SetBrakeStroke(4095);
+  usleep(200000);
+}
+// void VehicleUtil::VelocityControl(float veloc_kmh)
+// {
+//   GetDrvInf();
+//   if (_drvInf.mode == 0x00)
+//   {
+//     return;
+//   }
+//   float current_velocity = _drvInf.veloc;
+//   float cmd_velocity = veloc_kmh;
+//   float vel_diff_inc = 1.0;
+//   float vel_diff_dec = 2.0;
+//   float vel_offset_inc = 2;
+//   float vel_offset_dec = 4;
+//   if (cmd_velocity > current_velocity)
+//   {
+//     float increase_velocity = current_velocity + vel_diff_inc;
+//     SetDrvVeloc(increase_velocity + vel_offset_inc);
+//     cout << "increase: "
+//          << "vel = " << increase_velocity << endl;
+//   }
+//   else
+//   {
+//     float decrease_velocity = current_velocity - vel_diff_dec;
+//     if (decrease_velocity > vel_offset_dec)
+//     {
+//       SetDrvVeloc(decrease_velocity - vel_offset_dec);
+//     }
+//     else if (current_velocity > 0.0f)
+//     {
+//       decrease_velocity = 0.0f;
+//       SetDrvVeloc(0.0f);
+//     }
+//     cout << "decrease: "
+//          << "vel = " << decrease_velocity << endl;
+//   }
+// }
+void VehicleUtil::VelocityControl(float veloc_kmh, float acc)
+{
+  GetDrvInf();
+  if (_drvInf.mode == 0x00)
+  {
+    return;
+  }
+
+  float current_velocity_kmh = _drvInf.veloc;
+  float dt = 0.1f; // 你可以根据需要调整这个值
+
+  // 计算新速度，基于当前速度、加速度和时间间隔
+  float new_velocity_kmh = current_velocity_kmh + acc * dt;
+
+  // 限制新速度，确保它不会超过目标速度
+  if (acc > 0)
+  {
+    new_velocity_kmh = std::min(new_velocity_kmh, veloc_kmh);
+  }
+  else
+  {
+    new_velocity_kmh = std::max(new_velocity_kmh, veloc_kmh);
+  }
+
+  // 将新的速度设置为车辆的当前速度
+  SetDrvVeloc(new_velocity_kmh);
+
+  cout << "Updated velocity: "
+       << "vel = " << new_velocity_kmh << " km/h" << endl;
 }
 
 // Set Brake

@@ -56,13 +56,26 @@ XrmZmpNode::XrmZmpNode() : Node("xrm_zmp_interface")
 void XrmZmpNode::control_cmd_callback(const autoware_auto_control_msgs::msg::AckermannControlCommand::SharedPtr msg)
 {
   std::cout << "xrm_zmp_interface::control_cmd_callback() LOG: " << std::endl;
-  float target_veloc = msg->longitudinal.speed * 3.6f; // m/s to km/h
+  // m/s to km/h
+  float target_veloc = msg->longitudinal.speed * 3.6f;
+  // m/s^2 to km/h^2
+  float acc = msg->longitudinal.acceleration * 12960.0f;
+  vehicle_util_->VelocityControl(target_veloc, acc);
+  float cmd_steering_angle = msg->lateral.steering_tire_angle * 180.0f / M_PI;                  // rad to deg
+  float steering_tire_rotation_rate = msg->lateral.steering_tire_rotation_rate * 180.0f / M_PI; // rad/s to deg/s
+  vehicle_util_->SteeringControl(cmd_steering_angle, steering_tire_rotation_rate);
 }
 
 void XrmZmpNode::gear_cmd_callback(const autoware_auto_vehicle_msgs::msg::GearCommand::SharedPtr msg)
 {
   std::cout << "xrm_zmp_interface::gear_cmd_callback() LOG: " << std::endl;
   uint8_t gear = msg->command;
+
+  if (vehicle_util_->GetDrvSpeedKmh() != 0.0f)
+  {
+    return;
+  }
+  vehicle_util_->StopVehicle();
   if (gear == autoware_auto_vehicle_msgs::msg::GearCommand::NEUTRAL)
   {
     // shift N
