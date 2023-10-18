@@ -30,7 +30,7 @@ bool VehicleUtil::Init()
   _canCom->SetCANUSBZParam(CAN_CHANNEL_1, CAN_SPEED_1000, CANID_KIND_11);
 
   _hevCnt->SetStatusCallback(this);
-  _callback = NULL;
+
   ClearCntDiag(); // Autoware Extension
   return true;
 }
@@ -328,48 +328,6 @@ void VehicleUtil::UpdateState()
   GetOtherInf();
 }
 
-void VehicleUtil::ReceiveConfig(int num, int index, int value[])
-{
-  std::cout << "VehicleUtil::ReceiveConfig()" << std::endl;
-  printf("ReceiveConfig() num=%d index=%d value=%d\n", num, index, value[index]);
-  int data[3];
-  for (int i = 0; i < num; i++)
-  {
-    _config.data[index - 100] = value[i];
-    data[i] = value[i];
-  }
-  if (NULL != _callback)
-  {
-    _callback->UpdateConfig(num, index, data);
-  }
-}
-
-void VehicleUtil::ReceiveErrorStatus(int level, int error_code)
-{
-  std::cout << "VehicleUtil::ReceiveErrorStatus()" << std::endl;
-  printf("ReceiveErrorStatus() level=%d errCode=%d\n", level, error_code);
-  _errCode = error_code;
-  _errLevel = level;
-}
-
-void VehicleUtil::ReceiveEcho(int kind, int no)
-{
-  std::cout << "VehicleUtil::ReceiveEcho()" << std::endl;
-  printf("ReceiveEcho() kind=%d no=%d\n", kind, no);
-}
-
-void VehicleUtil::ReceiveVersion(char c0, char c1, char c2, char c3, char c4, char c5, char c6, char c7)
-{
-  std::cout << "VehicleUtil::ReceiveVersion()" << std::endl;
-  sprintf(_firm_version, "%c%c%c%c%c%c%c%c", c0, c1, c2, c3, c4, c5, c6, c7);
-}
-
-bool VehicleUtil::SetConfigCallback(ChangeConfig *callback)
-{
-  _callback = callback;
-  return true;
-}
-
 // Set Steer
 void VehicleUtil::SetStrMode(int mode)
 {
@@ -663,25 +621,6 @@ void VehicleUtil::SetProgram()
   usleep(200000);
 }
 
-void VehicleUtil::GetConfig(HEV_CONFIG kind)
-{
-  std::cout << "VehicleUtil::GetConfig()" << std::endl;
-  _hevCnt->ReqControlGain((int)kind, 1);
-}
-void VehicleUtil::SetConfig(HEV_CONFIG kind, int val)
-{
-  std::cout << "VehicleUtil::SetConfig()" << std::endl;
-  _hevCnt->SetControlGain((int)kind, val);
-}
-void VehicleUtil::SetConfig(HEV_CONFIG kind, float val)
-{
-  std::cout << "VehicleUtil::SetConfig()" << std::endl;
-  _hevCnt->SetControlGain((int)kind, val);
-}
-void VehicleUtil::SaveConfig()
-{
-  _hevCnt->SaveControlGain();
-}
 float VehicleUtil::DegToRad(float deg)
 {
   return (deg * M_PI / 180.0);

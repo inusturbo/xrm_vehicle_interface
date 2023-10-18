@@ -104,7 +104,6 @@ public:
   DrvInf _drvInf;
   StrInf _strInf;
   ConfigInf _config;
-  ChangeConfig *_callback;
 
   char _firm_version[9];
   int _errCode;
@@ -112,11 +111,10 @@ public:
 
   int _asistTrq;
 
-  void ClearCntDiag();                            // 清除计数器对话框。
-  bool Init();                                    // 初始化。
-  bool Start();                                   // 启动。
-  bool Close();                                   // 关闭。
-  bool SetConfigCallback(ChangeConfig *callback); // 设置配置回调函数。
+  void ClearCntDiag(); // 清除计数器对话框。
+  bool Init();         // 初始化。
+  bool Start();        // 启动。
+  bool Close();        // 关闭。
 
   void GetDrvInf();                // 获取驱动信息。
   void GetStrInf();                // 获取转向信息。
@@ -137,10 +135,6 @@ public:
   void UpdateDriveState(REP_DRIVE_INFO_INDEX index);
   void UpdateOtherState(REP_OTHER_INFO_INDEX index);
   void UpdateState();
-  void ReceiveConfig(int num, int index, int value[]);
-  void ReceiveErrorStatus(int level, int error_code);
-  void ReceiveEcho(int kind, int no);
-  void ReceiveVersion(char c0, char c1, char c2, char c3, char c4, char c5, char c6, char c7);
 
   // Set Steer
   void SetStrMode(int mode);
@@ -187,17 +181,7 @@ public:
   void SetManual();
   void SetProgram();
 
-  void GetConfig(HEV_CONFIG kind);
-  void SetConfig(HEV_CONFIG kind, int val);
-  void SetConfig(HEV_CONFIG kind, float val);
-  void SaveConfig();
-  float DegToRad(float deg)
-};
-
-class ChangeConfig
-{
-public:
-  virtual void UpdateConfig(int num, int index, int data[]) = 0;
+  float DegToRad(float deg);
 };
 
 #endif // VEHCILE_UTIL_HPP
