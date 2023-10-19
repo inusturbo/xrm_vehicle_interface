@@ -7,7 +7,7 @@ XrmZmpNode::XrmZmpNode() : Node("xrm_zmp_interface")
   vehicle_util_->Init();
   vehicle_util_->Start();
 
-  string base_frame_id_ = declare_parameter("base_frame_id", "base_link");
+  base_frame_id_ = declare_parameter("base_frame_id", "base_link");
 
   // Subscribers: From Autoware
   // Gate Mode

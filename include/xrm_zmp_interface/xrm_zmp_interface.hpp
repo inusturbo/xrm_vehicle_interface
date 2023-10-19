@@ -35,7 +35,7 @@ public:
     XrmZmpNode();
 
     VehicleUtil *vehicle_util_;
-
+    string base_frame_id_;
     // Subscribers: From Autoware
     // Gate Mode
     rclcpp::Subscription<tier4_control_msgs::msg::GateMode>::SharedPtr gate_mode_sub_;
