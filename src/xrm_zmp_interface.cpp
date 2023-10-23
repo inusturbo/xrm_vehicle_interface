@@ -9,6 +9,7 @@ XrmZmpNode::XrmZmpNode() : Node("xrm_zmp_interface")
 
   base_frame_id_ = declare_parameter("base_frame_id", "base_link");
 
+
   // Subscribers: From Autoware
   // Gate Mode
   gate_mode_sub_ = this->create_subscription<tier4_control_msgs::msg::GateMode>(
@@ -176,7 +177,6 @@ void XrmZmpNode::publishCommands()
   vehicle_util_->UpdateState();
   const rclcpp::Time current_time = get_clock()->now();
   std_msgs::msg::Header header;
-
   header.frame_id = base_frame_id_;
   header.stamp = current_time;
 
