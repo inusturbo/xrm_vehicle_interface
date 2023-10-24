@@ -13,6 +13,17 @@
 using namespace std;
 using namespace zmp::minivan;
 
+struct BattInf
+{
+  float current;            // 0x3B 充放電電流[A*10]
+  float max_dischg_current; // 0x3CB 最大放電電流[A*10]
+  float max_chg_current;    // 0x3CB 最大充電電流[A*10]
+  float soc;                // 0x3CB 残容量[%]
+  int min_temp;             // 0x3CB 最低温度[℃ ]
+  int max_temp;             // 0x3CB 最高温度[℃ ]
+  int voltage;              // 0x3CD バッテリ電圧[V]
+};
+
 struct DrvInf
 {
   int mode;           // ドライブモード(manual=0x00, program=0x10) 驱动模式，可以为 manual 或 program。
@@ -50,8 +61,42 @@ struct StrInf
   int servo;         // 制御のON/OFF(ON=true, OFF=false) 控制开关状态，true 表示开，false 表示关。
   int targetTorque;  // 目標トルク 目标转向力矩。
   int torque;        // 操舵トルク 当前转向力矩。
+  float trq1;        // TRQ1トルクセンサ
+  float trq2;        // TRQ2トルクセンサ
   float angle;       // 操舵角度[deg * 10] 当前转向角度，单位为 deg*10。
   float targetAngle; // 目標操舵角[deg*10] 目标转向角度，单位为 deg*10。
+};
+
+struct AccInf
+{
+  unsigned short time;
+  short accX;
+  short accY;
+  short accZ;
+};
+
+struct GyroInf
+{
+  unsigned short time;
+  short gyroX;
+  short gyroY;
+  short gyroZ;
+};
+
+struct CompInf
+{
+  unsigned short time;
+  short compX;
+  short compY;
+  short compZ;
+};
+
+struct SensorInf
+{
+  int ofz[4];
+  float seat;
+  int cntS[5];
+  float distance;
 };
 
 struct OtherInf
@@ -91,17 +136,19 @@ struct ConfigInf
   int data[21];
 };
 
-class VehicleUtil
+class VehicleUtil : public ChangeStateObserver
 {
 public:
   VehicleUtil();
   HevControl *_hevCnt;
   CANUSBZ *_canCom;
 
+  BattInf _battInf;
   BrakeInf _brakeInf;
   OtherInf _otherInf;
   DrvInf _drvInf;
   StrInf _strInf;
+  SensorInf _sensInf;
   ConfigInf _config;
 
   char _firm_version[9];
@@ -130,9 +177,6 @@ public:
   unsigned char GetBlinkerLeft();  // 获取左转灯。
   unsigned char GetBlinkerRight(); // 获取右转灯。
 
-  void UpdateSteerState(REP_STEER_INFO_INDEX index);
-  void UpdateDriveState(REP_DRIVE_INFO_INDEX index);
-  void UpdateOtherState(REP_OTHER_INFO_INDEX index);
   void UpdateState();
 
   // Set Steer
@@ -181,6 +225,74 @@ public:
   void SetProgram();
 
   float DegToRad(float deg);
+
+  /**
+   * @brief	ステアリング状態通知コールバック関数
+   *
+   * @param	index 通知インデックス
+   */
+  void UpdateSteerState(REP_STEER_INFO_INDEX index);
+
+  /**
+   * @brief	ドライブ状態通知コールバック関数
+   *
+   * @param	index 通知インデックス
+   */
+  void UpdateDriveState(REP_DRIVE_INFO_INDEX index);
+
+  /**
+   * @brief	バッテリ状態通知コールバック関数
+   *
+   * @param	index 通知インデックス
+   */
+  void UpdateBattState(REP_BATT_INFO_INDEX index);
+
+  /**
+   * @brief	他状態通知コールバック関数
+   *
+   * @param	index 通知インデックス
+   */
+  void UpdateOtherState(REP_OTHER_INFO_INDEX index);
+
+  /**
+   * @brief	IMUメッセージ受信コールバック関数
+   *
+   * @param	index 通知インデックス
+   */
+  void ReceiveImuMsg(REP_IMU_INFO_INDEX index);
+
+  // #ifdef USE_DEMO
+  void UpdateDemoSensorState(REP_DEMO_SENSOR_INFO_INDEX index);
+  // #endif
+  /**
+   * @brief	コンフィグ応答コールバック関数
+   *
+   * @param	num コンフィグ数
+   * @param	index コンフィグの開始INDEX
+   * @param	value[] コンフィグ
+   */
+  void ReceiveConfig(int num, int index, int value[]);
+
+  /**
+   * @brief	エラー通知コールバック関数
+   *
+   * @param	level エラーレベル
+   * @param	error_code エラーコード
+   */
+  void ReceiveErrorStatus(int level, int error_code);
+  /**
+   * @brief	Echo通知コールバック関数
+   *
+   * @param	kind 装置種別
+   * @param	no 装置番号
+   */
+  void ReceiveEcho(int kind, int no);
+  /**
+   * @brief	Version通知コールバック関数
+   *
+   * @param	firm_version
+   */
+  void ReceiveVersion(char c0, char c1, char c2, char c3, char c4, char c5, char c6, char c7);
 };
 
 #endif // VEHCILE_UTIL_HPP
