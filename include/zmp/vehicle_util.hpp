@@ -13,6 +13,8 @@
 using namespace std;
 using namespace zmp::minivan;
 
+#define USE_DEMO 1
+
 struct BattInf
 {
   float current;            // 0x3B 充放電電流[A*10]
@@ -47,6 +49,14 @@ struct BrakeInf
   int actualPedalStr;         // ペダルストローク現在値 当前制动踏板行程值。(0～4095)
   int targetPedalStr;         // ペダルストローク目標値 制动踏板目标行程值。(0～4095)
   int inputPedalStr;          // ペダルストローク入力値 制动踏板输入行程值。(0～4095)
+  float prl;                  // PRLセンサ値
+  float pfl;                  // PFLセンサ値
+  float prr;                  // PRRセンサ値
+  float pfr;                  // PFRセンサ値
+  float sks1;                 // SKS1ペダルセンサ値
+  float sks2;                 // SKS2ペダルセンサ値
+  float pmc1;                 // PMC1ペダルセンサ値
+  float pmc2;                 // PMC2ペダルセンサ値
   unsigned char brakeLamp;    // 制动灯状态。
   unsigned char blinkerLeft;  // 左转灯状态。
   unsigned char blinkerRight; // 右转灯状态。

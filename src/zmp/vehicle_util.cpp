@@ -412,30 +412,30 @@ void VehicleUtil::SetDrvProgram()
 void VehicleUtil::SetStrManual()
 {
   std::cout << "VehicleUtil::SetStrManual()" << std::endl;
-  if (_strInf.mode == 0x10)
+  if (_strInf.mode == MODE_PROGRAM)
   {
-    SetStrMode(0x00);
+    SetStrMode(MODE_MANUAL);
     usleep(200000);
   }
-  if (_strInf.servo == 0x10)
+  if (_strInf.servo == MODE_PROGRAM)
   {
-    SetStrServo(0x00);
+    SetStrServo(MODE_MANUAL);
     usleep(200000);
   }
 }
 void VehicleUtil::SetStrProgram()
 {
   std::cout << "VehicleUtil::SetStrProgram()" << std::endl;
-  if (_strInf.mode == 0x00)
+  if (_strInf.mode == MODE_MANUAL)
   {
-    SetStrMode(0x10);
+    SetStrMode(MODE_PROGRAM);
     usleep(200000);
     SetStrCMode(CONT_MODE_TORQUE);
     usleep(200000);
   }
-  if (_strInf.servo == 0x00)
+  if (_strInf.servo == MODE_MANUAL)
   {
-    SetStrServo(0x10);
+    SetStrServo(MODE_PROGRAM);
     usleep(200000);
   }
 }
