@@ -20,7 +20,7 @@ bool VehicleUtil::Init()
   _hevCnt = new HevControl();
   _canCom = new CANUSBZ();
 
-  _hevCnt->InitHevControl(_canCom, (char *)_DEVICE_NAME);
+  std::cout << "VehicleUtil::Init(): InitHevControl"<< _hevCnt->InitHevControl(_canCom, (char *)_DEVICE_NAME)<<std::endl;
 
   _canCom->SetCANUSBZParam(CAN_CHANNEL_0, CAN_SPEED_500, CANID_KIND_11);
   _canCom->SetCANUSBZParam(CAN_CHANNEL_1, CAN_SPEED_1000, CANID_KIND_11);
@@ -56,8 +56,8 @@ bool VehicleUtil::Close()
 void VehicleUtil::GetDrvInf()
 {
   std::cout << "VehicleUtil::GetDrvInf()" << std::endl;
-  _hevCnt->GetDrvMode((int &)_drvInf.mode);
-  _hevCnt->GetDrvControlMode((int &)_drvInf.contMode);
+  std::cout << "VehicleUtil::GetDrvInf(): GetDrvMode"<< _hevCnt->GetDrvMode((int &)_drvInf.mode)<< std::endl;
+  std::cout << "VehicleUtil::GetDrvInf(): GetDrvControlMode"<< _hevCnt->GetDrvControlMode((int &)_drvInf.contMode)<< std::endl;
   _hevCnt->GetDrvOverrideMode((int &)_drvInf.overrideMode);
   _hevCnt->GetDrvServo((int &)_drvInf.servo);
   _hevCnt->GetGasStroke((int &)_drvInf.actualPedalStr, (int &)_drvInf.targetPedalStr, (int &)_drvInf.inputPedalStr);
@@ -325,11 +325,13 @@ void VehicleUtil::UpdateState()
 // Set Steer
 void VehicleUtil::SetStrMode(int mode)
 {
-  _hevCnt->SetStrMode(mode);
+  
+  std::cout << "VehicleUtil::SetStrMode(): SetStrMode" << _hevCnt->SetStrMode(mode)<<std::endl;
 }
 void VehicleUtil::SetStrCMode(int cmode)
 {
-  _hevCnt->SetStrControlMode(cmode);
+  std::cout << "VehicleUtil::SetStrCMode(): SetStrControlMode" <<_hevCnt->SetStrControlMode(cmode)<<std::endl;
+
 }
 void VehicleUtil::SetStrOMOde(int omode)
 {
@@ -381,11 +383,11 @@ void VehicleUtil::SteeringControl(float cmd_steering_angle, float steering_tire_
 // Set Drive
 void VehicleUtil::SetDrvMode(int mode)
 {
-  _hevCnt->SetDrvMode(mode);
+  std::cout << "VehicleUtil::SetDrvMode() SetDrvMode " << _hevCnt->SetDrvMode(mode)<<std::endl;
 }
 void VehicleUtil::SetDrvCMode(int cmode)
 {
-  _hevCnt->SetDrvControlMode(cmode);
+  std::cout << "VehicleUtil::SetDrvCMode() SetDrvControlMode " << _hevCnt->SetDrvControlMode(cmode)<<std::endl;
 }
 void VehicleUtil::SetDrvOMode(int omode)
 {

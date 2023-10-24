@@ -174,6 +174,7 @@ void XrmZmpNode::turn_indicators_cmd_callback(const autoware_auto_vehicle_msgs::
 void XrmZmpNode::publishCommands()
 {
   std::cout << "xrm_zmp_interface::publishCommands() LOG: " << std::endl;
+  vehicle_util_->SetProgram();
   vehicle_util_->UpdateState();
   const rclcpp::Time current_time = get_clock()->now();
   std_msgs::msg::Header header;
