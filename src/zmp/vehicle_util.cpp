@@ -20,12 +20,12 @@ bool VehicleUtil::Init()
   _hevCnt = new HevControl();
   _canCom = new CANUSBZ();
 
-  std::cout << "VehicleUtil::Init(): InitHevControl" << _hevCnt->InitHevControl(_canCom, (char *)_DEVICE_NAME) << std::endl;
+  std::cout << "VehicleUtil::Init(): InitHevControl " << _hevCnt->InitHevControl(_canCom, (char *)_DEVICE_NAME) << std::endl;
 
-  _canCom->SetCANUSBZParam(CAN_CHANNEL_0, CAN_SPEED_500, CANID_KIND_11);
-  _canCom->SetCANUSBZParam(CAN_CHANNEL_1, CAN_SPEED_1000, CANID_KIND_11);
+  std::cout << "VehicleUtil::Init(): SetCanUSBParam  " << _canCom->SetCANUSBZParam(CAN_CHANNEL_0, CAN_SPEED_500, CANID_KIND_11) << std::endl;
+  std::cout << "VehicleUtil::Init(): SetCanUSBParam  " << _canCom->SetCANUSBZParam(CAN_CHANNEL_1, CAN_SPEED_1000, CANID_KIND_11) << std::endl;
 
-  _hevCnt->SetStatusCallback(this);
+  std::cout << "VehicleUtil::Init(): SetStatusCallback  " << _hevCnt->SetStatusCallback(this) << std::endl;
 
   ClearCntDiag(); // Autoware Extension
   return true;
@@ -58,55 +58,55 @@ bool VehicleUtil::Close()
 void VehicleUtil::GetDrvInf()
 {
   std::cout << "VehicleUtil::GetDrvInf()" << std::endl;
-  std::cout << "VehicleUtil::GetDrvInf(): GetDrvMode" << _hevCnt->GetDrvMode((int &)_drvInf.mode) << std::endl;
-  std::cout << "VehicleUtil::GetDrvInf(): GetDrvControlMode" << _hevCnt->GetDrvControlMode((int &)_drvInf.contMode) << std::endl;
-  _hevCnt->GetDrvOverrideMode((int &)_drvInf.overrideMode);
-  _hevCnt->GetDrvServo((int &)_drvInf.servo);
-  _hevCnt->GetGasStroke((int &)_drvInf.actualPedalStr, (int &)_drvInf.targetPedalStr, (int &)_drvInf.inputPedalStr);
-  _hevCnt->GetVeloc((float &)_drvInf.veloc, (float &)_drvInf.targetVeloc);
-  _hevCnt->GetShiftMode((int &)_drvInf.actualShift, (int &)_drvInf.targetShift, (int &)_drvInf.inputShift);
+  std::cout << "VehicleUtil::GetDrvInf(): GetDrvMode " << _hevCnt->GetDrvMode((int &)_drvInf.mode) << std::endl;
+  std::cout << "VehicleUtil::GetDrvInf(): GetDrvControlMode " << _hevCnt->GetDrvControlMode((int &)_drvInf.contMode) << std::endl;
+  std::cout << "VehicleUtil::GetDrvInf(): GetDrvOverrideMode " << _hevCnt->GetDrvOverrideMode((int &)_drvInf.overrideMode) << std::endl;
+  std::cout << "VehicleUtil::GetDrvInf(): GetDrvServo " << _hevCnt->GetDrvServo((int &)_drvInf.servo) << std::endl;
+  std::cout << "VehicleUtil::GetDrvInf(): GetGasStroke " << _hevCnt->GetGasStroke((int &)_drvInf.actualPedalStr, (int &)_drvInf.targetPedalStr, (int &)_drvInf.inputPedalStr) << std::endl;
+  std::cout << "VehicleUtil::GetDrvInf(): GetVeloc " << _hevCnt->GetVeloc((float &)_drvInf.veloc, (float &)_drvInf.targetVeloc) << std::endl;
+  std::cout << "VehicleUtil::GetDrvInf(): GetShiftMode " << _hevCnt->GetShiftMode((int &)_drvInf.actualShift, (int &)_drvInf.targetShift, (int &)_drvInf.inputShift) << std::endl;
 }
 
 void VehicleUtil::GetBrakeInf()
 {
   std::cout << "VehicleUtil::GetBrakeInf()" << std::endl;
-  _hevCnt->GetBrakeStatus((unsigned char &)_brakeInf.brakeLamp, (unsigned char &)_brakeInf.blinkerLeft, (unsigned char &)_brakeInf.blinkerRight, (unsigned char &)_brakeInf.brakeMode);
-  _hevCnt->GetBrakeStrokeFromOBD((float &)_otherInf.brkPedalStrFromP, (bool &)_brakeInf.pressed);
-  _hevCnt->GetBrakeStroke((int &)_brakeInf.actualPedalStr, (int &)_brakeInf.targetPedalStr, (int &)_brakeInf.inputPedalStr);
+  std::cout << "VehicleUtil::GetBrakeInf(): GetBrakeStatus " << _hevCnt->GetBrakeStatus((unsigned char &)_brakeInf.brakeLamp, (unsigned char &)_brakeInf.blinkerLeft, (unsigned char &)_brakeInf.blinkerRight, (unsigned char &)_brakeInf.brakeMode) << std::endl;
+  std::cout << "VehicleUtil::GetBrakeInf(): GetBrakeStrokeFromOBD " << _hevCnt->GetBrakeStrokeFromOBD((float &)_otherInf.brkPedalStrFromP, (bool &)_brakeInf.pressed) << std::endl;
+  std::cout << "VehicleUtil::GetBrakeInf(): GetBrakeStroke " << _hevCnt->GetBrakeStroke((int &)_brakeInf.actualPedalStr, (int &)_brakeInf.targetPedalStr, (int &)_brakeInf.inputPedalStr) << std::endl;
 }
 
 void VehicleUtil::GetStrInf()
 {
   std::cout << "VehicleUtil::GetStrInf()" << std::endl;
-  _hevCnt->GetStrMode((int &)_strInf.mode);
-  _hevCnt->GetStrControlMode((int &)_strInf.cont_mode);
-  _hevCnt->GetStrOverrideMode((int &)_strInf.overrideMode);
-  _hevCnt->GetStrServo((int &)_strInf.servo);
-  _hevCnt->GetStrTorque((int &)_strInf.torque);
-  _hevCnt->GetStrTargetTorque((int &)_strInf.targetTorque);
-  _hevCnt->GetStrAngle((float &)_strInf.angle, (float &)_strInf.targetAngle);
+  std::cout << "VehicleUtil::GetStrInf(): GetStrMode " << _hevCnt->GetStrMode((int &)_strInf.mode) << std::endl;
+  std::cout << "VehicleUtil::GetStrInf(): GetStrControlMode " << _hevCnt->GetStrControlMode((int &)_strInf.cont_mode) << std::endl;
+  std::cout << "VehicleUtil::GetStrInf(): GetStrOverrideMode " << _hevCnt->GetStrOverrideMode((int &)_strInf.overrideMode) << std::endl;
+  std::cout << "VehicleUtil::GetStrInf(): GetStrServo " << _hevCnt->GetStrServo((int &)_strInf.servo) << std::endl;
+  std::cout << "VehicleUtil::GetStrInf(): GetStrTorque " << _hevCnt->GetStrTorque((int &)_strInf.torque) << std::endl;
+  std::cout << "VehicleUtil::GetStrInf(): GetStrTargetTorque " << _hevCnt->GetStrTargetTorque((int &)_strInf.targetTorque) << std::endl;
+  std::cout << "VehicleUtil::GetStrInf(): GetStrAngle " << _hevCnt->GetStrAngle((float &)_strInf.angle, (float &)_strInf.targetAngle) << std::endl;
 }
 
 void VehicleUtil::GetOtherInf()
 {
   std::cout << "VehicleUtil::GetOtherInf()" << std::endl;
-  _hevCnt->GetBrakeStrokeFromOBD((float &)_otherInf.brkPedalStrFromP, (bool &)_brakeInf.pressed);
-  _hevCnt->GetGasStrokeFromOBD((int &)_otherInf.drvPedalStrFromP);
-  _hevCnt->GetVelocFromOBD((float &)_otherInf.velocFromP);
-  _hevCnt->GetVelocFromOBD2((float &)_otherInf.velocFromP2);
-  _hevCnt->GetWheelVelocF((float &)_otherInf.velocFrFromP, (float &)_otherInf.velocFlFromP);
-  _hevCnt->GetWheelVelocR((float &)_otherInf.velocRrFromP, (float &)_otherInf.velocRlFromP);
-  _hevCnt->GetShiftModeFromOBD((int &)_otherInf.shiftFromPrius);
-  _hevCnt->GetEvMode((int &)_otherInf.ev_mode);
-  _hevCnt->GetIceRpm((int &)_otherInf.rpm);
-  _hevCnt->GetIceCoolantTemp((int &)_otherInf.temp);
-  _hevCnt->GetAcc((float &)_otherInf.acc);
-  _hevCnt->GetSideAcc((float &)_otherInf.sideAcc);
-  _hevCnt->GetDriveMode((int &)_otherInf.drv_mode);
-  _hevCnt->GetCruiseControl((bool &)_otherInf.cluise);
-  _hevCnt->GetLightState((LIGHT_STATE &)_otherInf.light);
-  _hevCnt->GetGasLevel((int &)_otherInf.level);
-  _hevCnt->GetDoorState((DOOR_STATE &)_otherInf.door);
+  std::cout << "VehicleUtil::GetOtherInf(): GetBrakeStrokeFromOBD " << _hevCnt->GetBrakeStrokeFromOBD((float &)_otherInf.brkPedalStrFromP, (bool &)_brakeInf.pressed) << std::endl;
+  std::cout << "VehicleUtil::GetOtherInf(): GetGasStrokeFromOBD " << _hevCnt->GetGasStrokeFromOBD((int &)_otherInf.drvPedalStrFromP) << std::endl;
+  std::cout << "VehicleUtil::GetOtherInf(): GetVelocFromOBD " << _hevCnt->GetVelocFromOBD((float &)_otherInf.velocFromP) << std::endl;
+  std::cout << "VehicleUtil::GetOtherInf(): GetVelocFromOBD2 " << _hevCnt->GetVelocFromOBD2((float &)_otherInf.velocFromP2) << std::endl;
+  std::cout << "VehicleUtil::GetOtherInf(): GetWheelVelocF " << _hevCnt->GetWheelVelocF((float &)_otherInf.velocFrFromP, (float &)_otherInf.velocFlFromP) << std::endl;
+  std::cout << "VehicleUtil::GetOtherInf(): GetWheelVelocR " << _hevCnt->GetWheelVelocR((float &)_otherInf.velocRrFromP, (float &)_otherInf.velocRlFromP) << std::endl;
+  std::cout << "VehicleUtil::GetOtherInf(): GetShiftModeFromOBD " << _hevCnt->GetShiftModeFromOBD((int &)_otherInf.shiftFromPrius) << std::endl;
+  std::cout << "VehicleUtil::GetOtherInf(): GetEvMode " << _hevCnt->GetEvMode((int &)_otherInf.ev_mode) << std::endl;
+  std::cout << "VehicleUtil::GetOtherInf(): GetIceRpm " << _hevCnt->GetIceRpm((int &)_otherInf.rpm) << std::endl;
+  std::cout << "VehicleUtil::GetOtherInf(): GetIceCoolantTemp " << _hevCnt->GetIceCoolantTemp((int &)_otherInf.temp) << std::endl;
+  std::cout << "VehicleUtil::GetOtherInf(): GetAcc " << _hevCnt->GetAcc((float &)_otherInf.acc) << std::endl;
+  std::cout << "VehicleUtil::GetOtherInf(): GetSideAcc " << _hevCnt->GetSideAcc((float &)_otherInf.sideAcc) << std::endl;
+  std::cout << "VehicleUtil::GetOtherInf(): GetDriveMode " << _hevCnt->GetDriveMode((int &)_otherInf.drv_mode) << std::endl;
+  std::cout << "VehicleUtil::GetOtherInf(): GetCruiseControl " << _hevCnt->GetCruiseControl((bool &)_otherInf.cluise) << std::endl;
+  std::cout << "VehicleUtil::GetOtherInf(): GetLightState " << _hevCnt->GetLightState((LIGHT_STATE &)_otherInf.light) << std::endl;
+  std::cout << "VehicleUtil::GetOtherInf(): GetGasLevel " << _hevCnt->GetGasLevel((int &)_otherInf.level) << std::endl;
+  std::cout << "VehicleUtil::GetOtherInf(): GetDoorState " << _hevCnt->GetDoorState((DOOR_STATE &)_otherInf.door) << std::endl;
 }
 
 int VehicleUtil::isDrvControled()
@@ -143,8 +143,8 @@ int VehicleUtil::isStrControled()
 
 int VehicleUtil::GetCurrentGear()
 {
-  std::cout << "VehicleUtil::GetGear()" << std::endl;
   GetOtherInf();
+  std::cout << "VehicleUtil::GetCurrentGear() " << _otherInf.shiftFromPrius << std::endl;
   return _otherInf.shiftFromPrius; //(0x00=B, 0x10=D, 0x20=N, 0x40=R)
 }
 
@@ -502,6 +502,7 @@ void VehicleUtil::UpdateSteerState(REP_STEER_INFO_INDEX index)
  */
 void VehicleUtil::UpdateDriveState(REP_DRIVE_INFO_INDEX index)
 {
+  std::cout << "VehicleUtil::UpdateDriveState()" << std::endl;
   switch (index)
   {
   case REP_DRV_MODE:
@@ -583,6 +584,7 @@ void VehicleUtil::UpdateDriveState(REP_DRIVE_INFO_INDEX index)
  */
 void VehicleUtil::UpdateBattState(REP_BATT_INFO_INDEX index)
 {
+  std::cout << "VehicleUtil::UpdateBattState()" << std::endl;
   switch (index)
   {
   case REP_BATT_INFO:
