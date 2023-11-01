@@ -4,11 +4,13 @@ VehicleUtil::VehicleUtil()
 {
   std::cout << "VehicleUtil::VehicleUtil()" << std::endl;
   // init data
-  memset(&_brakeInf, 0x0, sizeof(BrakeInf));
-  memset(&_otherInf, 0x0, sizeof(OtherInf));
-  memset(&_drvInf, 0x0, sizeof(DrvInf));
-  memset(&_strInf, 0x0, sizeof(StrInf));
-  memset(&_config, 0x0, sizeof(ConfigInf));
+  memset(&_battInf, 0x0, sizeof(BattInf));
+    memset(&_brakeInf, 0x0, sizeof(BrakeInf));
+    memset(&_otherInf, 0x0, sizeof(OtherInf));
+    memset(&_drvInf, 0x0, sizeof(DrvInf));
+    memset(&_strInf, 0x0, sizeof(StrInf));
+    memset(&_sensInf, 0x0, sizeof(SensorInf));
+    memset(&_config, 0x0, sizeof(ConfigInf));
   _errCode = 0;
   _errLevel = 0;
   memset(&_firm_version, 0x0, sizeof(char) * 9);
@@ -17,13 +19,15 @@ VehicleUtil::VehicleUtil()
 bool VehicleUtil::Init()
 {
   std::cout << "VehicleUtil::Init()" << std::endl;
-  _hevCnt = new HevControl();
   _canCom = new CANUSBZ();
-
-  std::cout << "VehicleUtil::Init(): InitHevControl " << _hevCnt->InitHevControl(_canCom, (char *)_DEVICE_NAME) << std::endl;
+  _hevCnt = new HevControl();
+  std::cout << "VehicleUtil::Init(): InitHevControl " << _hevCnt->InitHevControl(_canCom, (char *)"/dev/ttyACM0") << std::endl;
+  
+  //_canCom->Init((char *)_DEVICE_NAME);
 
   std::cout << "VehicleUtil::Init(): SetCanUSBParam  " << _canCom->SetCANUSBZParam(CAN_CHANNEL_0, CAN_SPEED_500, CANID_KIND_11) << std::endl;
   std::cout << "VehicleUtil::Init(): SetCanUSBParam  " << _canCom->SetCANUSBZParam(CAN_CHANNEL_1, CAN_SPEED_1000, CANID_KIND_11) << std::endl;
+  
 
   std::cout << "VehicleUtil::Init(): SetStatusCallback  " << _hevCnt->SetStatusCallback(this) << std::endl;
 
