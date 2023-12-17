@@ -2,7 +2,6 @@
 
 VehicleUtil::VehicleUtil()
 {
-  std::cout << "VehicleUtil::VehicleUtil()" << std::endl;
   // init data
   memset(&_battInf, 0x0, sizeof(BattInf));
   memset(&_brakeInf, 0x0, sizeof(BrakeInf));
@@ -18,7 +17,6 @@ VehicleUtil::VehicleUtil()
 
 bool VehicleUtil::Init()
 {
-  std::cout << "VehicleUtil::Init()" << std::endl;
   _canCom = new CANUSBZ();
   _hevCnt = new HevControl();
   std::cout << "VehicleUtil::Init(): InitHevControl "
@@ -40,7 +38,6 @@ bool VehicleUtil::Init()
 
 void VehicleUtil::ClearCntDiag()
 {
-  std::cout << "VehicleUtil::ClearCntDiag()" << std::endl;
   CANMsg msg;
   msg.LEN = 1;
   msg.ID = 0x18 << 6 | MSG_COMMON_REQ_ERROR_STATUS;
@@ -50,14 +47,12 @@ void VehicleUtil::ClearCntDiag()
 
 bool VehicleUtil::Start()
 {
-  std::cout << "VehicleUtil::Start()" << std::endl;
   _canCom->Start();
   return true;
 }
 
 bool VehicleUtil::Close()
 {
-  std::cout << "VehicleUtil::Close()" << std::endl;
   _canCom->Close();
   return true;
 }
@@ -120,26 +115,21 @@ void VehicleUtil::GetOtherInf()
 
 int VehicleUtil::isDrvControled()
 {
-  std::cout << "VehicleUtil::isDrvControled()" << std::endl;
   GetDrvInf();
   if (_drvInf.mode == 0x10 && _drvInf.servo == 0x10) {
     std::cout << "VehicleUtil::isDrvControled() LOG: Vehicle is controlled" << std::endl;
     return 1;
   } else {
-    std::cout << "VehicleUtil::isDrvControled() LOG: Vehicle is not controlled" << std::endl;
     return 0;
   }
 }
 
 int VehicleUtil::isStrControled()
 {
-  std::cout << "VehicleUtil::isStrControled()" << std::endl;
   GetStrInf();
   if (_strInf.mode == 0x10 && _strInf.servo == 0x10) {
-    std::cout << "VehicleUtil::isStrControled() LOG: Steering is controlled" << std::endl;
     return 1;
   } else {
-    std::cout << "VehicleUtil::isStrControled() LOG: Steering is not controlled" << std::endl;
     return 0;
   }
 }
@@ -147,13 +137,12 @@ int VehicleUtil::isStrControled()
 int VehicleUtil::GetCurrentGear()
 {
   GetOtherInf();
-  std::cout << "VehicleUtil::GetCurrentGear() " << _otherInf.shiftFromPrius << std::endl;
   return _otherInf.shiftFromPrius;  //(0x00=B, 0x10=D, 0x20=N, 0x40=R)
 }
 
 float VehicleUtil::GetStrAngle()
 {
-  return _strInf.angle / 10.0f;
+  return _strInf.angle;
 }
 
 float VehicleUtil::GetStrRad()
@@ -455,7 +444,6 @@ float VehicleUtil::DegToRad(float deg)
  */
 void VehicleUtil::UpdateSteerState(REP_STEER_INFO_INDEX index)
 {
-  std::cout << "VehicleUtil::UpdateSteerState()" << std::endl;
   switch (index) {
     case REP_STR_MODE:
       _hevCnt->GetStrMode((int &)_strInf.mode);
@@ -488,7 +476,6 @@ void VehicleUtil::UpdateSteerState(REP_STEER_INFO_INDEX index)
  */
 void VehicleUtil::UpdateDriveState(REP_DRIVE_INFO_INDEX index)
 {
-  std::cout << "VehicleUtil::UpdateDriveState()" << std::endl;
   switch (index) {
     case REP_DRV_MODE:
       _hevCnt->GetDrvMode((int &)_drvInf.mode);
@@ -578,7 +565,6 @@ void VehicleUtil::UpdateDriveState(REP_DRIVE_INFO_INDEX index)
  */
 void VehicleUtil::UpdateBattState(REP_BATT_INFO_INDEX index)
 {
-  std::cout << "VehicleUtil::UpdateBattState()" << std::endl;
   switch (index) {
     case REP_BATT_INFO:
       _hevCnt->GetBattInfo(
@@ -605,7 +591,6 @@ void VehicleUtil::UpdateBattState(REP_BATT_INFO_INDEX index)
  */
 void VehicleUtil::UpdateOtherState(REP_OTHER_INFO_INDEX index)
 {
-  std::cout << "VehicleUtil::UpdateOtherState()" << std::endl;
   switch (index) {
     case REP_LIGHT_STATE:
       _hevCnt->GetLightState((LIGHT_STATE &)_otherInf.light);
@@ -637,7 +622,6 @@ void VehicleUtil::ReceiveImuMsg(REP_IMU_INFO_INDEX index)
 // #ifdef USE_DEMO
 void VehicleUtil::UpdateDemoSensorState(REP_DEMO_SENSOR_INFO_INDEX index)
 {
-  std::cout << "VehicleUtil::UpdateDemoSensorState()" << std::endl;
 }
 // #endif
 /**

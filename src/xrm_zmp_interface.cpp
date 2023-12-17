@@ -63,7 +63,6 @@ XrmZmpNode::XrmZmpNode() : Node("xrm_zmp_interface")
 void XrmZmpNode::control_cmd_callback(
   const autoware_auto_control_msgs::msg::AckermannControlCommand::SharedPtr msg)
 {
-  std::cout << "xrm_zmp_interface::control_cmd_callback() LOG: " << std::endl;
   // m/s to km/h
   float target_veloc = msg->longitudinal.speed * 3.6f;
   // m/s^2 to km/h^2
@@ -78,7 +77,6 @@ void XrmZmpNode::control_cmd_callback(
 void XrmZmpNode::gear_cmd_callback(
   const autoware_auto_vehicle_msgs::msg::GearCommand::SharedPtr msg)
 {
-  std::cout << "xrm_zmp_interface::gear_cmd_callback() LOG: " << std::endl;
   uint8_t gear = msg->command;
 
   if (vehicle_util_->GetDrvSpeedKmh() != 0.0f) {
@@ -108,7 +106,6 @@ void XrmZmpNode::gear_cmd_callback(
 
 void XrmZmpNode::gate_mode_callback(const tier4_control_msgs::msg::GateMode::SharedPtr msg)
 {
-  std::cout << "xrm_zmp_interface::gate_mode_callback() LOG: " << std::endl;
   uint8_t mode = msg->data;
   if (mode == tier4_control_msgs::msg::GateMode::AUTO) {
     vehicle_util_->SetProgram();
@@ -120,12 +117,9 @@ void XrmZmpNode::gate_mode_callback(const tier4_control_msgs::msg::GateMode::Sha
 void XrmZmpNode::hazard_lights_cmd_callback(
   const autoware_auto_vehicle_msgs::msg::HazardLightsCommand::SharedPtr msg)
 {
-  std::cout << "xrm_zmp_interface::hazard_lights_cmd_callback() LOG: " << std::endl;
   if (msg->command == autoware_auto_vehicle_msgs::msg::HazardLightsCommand::ENABLE) {
-    std::cout << "xrm_zmp_interface::hazard_lights_cmd_callback() LOG: ENABLE" << std::endl;
     vehicle_util_->SetHazardLights(1);
   } else if (msg->command == autoware_auto_vehicle_msgs::msg::HazardLightsCommand::DISABLE) {
-    std::cout << "xrm_zmp_interface::hazard_lights_cmd_callback() LOG: DISABLE" << std::endl;
     vehicle_util_->SetHazardLights(0);
   } else {
     std::cout << "xrm_zmp_interface::hazard_lights_cmd_callback() NO_COMMAND" << std::endl;
@@ -135,17 +129,13 @@ void XrmZmpNode::hazard_lights_cmd_callback(
 void XrmZmpNode::turn_indicators_cmd_callback(
   const autoware_auto_vehicle_msgs::msg::TurnIndicatorsCommand::SharedPtr msg)
 {
-  std::cout << "xrm_zmp_interface::turn_indicators_cmd_callback() LOG: " << std::endl;
   if (msg->command == autoware_auto_vehicle_msgs::msg::TurnIndicatorsCommand::ENABLE_LEFT) {
-    std::cout << "xrm_zmp_interface::turn_indicators_cmd_callback() LOG: LEFT" << std::endl;
     vehicle_util_->SetBlinkerLeft(1);
     vehicle_util_->SetBlinkerRight(0);
   } else if (msg->command == autoware_auto_vehicle_msgs::msg::TurnIndicatorsCommand::ENABLE_RIGHT) {
-    std::cout << "xrm_zmp_interface::turn_indicators_cmd_callback() LOG: RIGHT" << std::endl;
     vehicle_util_->SetBlinkerRight(1);
     vehicle_util_->SetBlinkerLeft(0);
   } else if (msg->command == autoware_auto_vehicle_msgs::msg::TurnIndicatorsCommand::DISABLE) {
-    std::cout << "xrm_zmp_interface::turn_indicators_cmd_callback() LOG: NONE" << std::endl;
     vehicle_util_->SetBlinkerRight(0);
     vehicle_util_->SetBlinkerLeft(0);
   } else {
@@ -155,7 +145,6 @@ void XrmZmpNode::turn_indicators_cmd_callback(
 
 void XrmZmpNode::publishCommands()
 {
-  std::cout << "xrm_zmp_interface::publishCommands() LOG: " << std::endl;
   vehicle_util_->UpdateState();
   const rclcpp::Time current_time = get_clock()->now();
   std_msgs::msg::Header header;
